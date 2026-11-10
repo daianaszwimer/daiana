@@ -1,26 +1,133 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Registered so the gradients can transition between phases. */
+@property --sky-top {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #4a9fe8;
+}
+@property --sky-bottom {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #bfe3ff;
+}
+@property --glow {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: rgb(255 255 240 / 0.7);
+}
+@property --fg {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #ffffff;
+}
+
+[data-phase="sunrise"] {
+  --sky-top: #6b7fd7;
+  --sky-bottom: #ffb88c;
+  --glow: rgb(255 214 150 / 0.85);
+  --fg: #fff8f0;
+}
+
+[data-phase="day"] {
+  --sky-top: #3a8ee6;
+  --sky-bottom: #bfe3ff;
+  --glow: rgb(255 255 235 / 0.75);
+  --fg: #ffffff;
+}
+
+[data-phase="sunset"] {
+  --sky-top: #3d2c6b;
+  --sky-bottom: #ff7b54;
+  --glow: rgb(255 160 90 / 0.8);
+  --fg: #fff1e6;
+}
+
+[data-phase="night"] {
+  --sky-top: #05060f;
+  --sky-bottom: #1b2347;
+  --glow: rgb(210 220 255 / 0.25);
+  --fg: #e8ecff;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--sky-bottom);
+  color: var(--fg);
+}
+
+.sky {
+  background:
+    radial-gradient(circle at 50% 85%, var(--glow), transparent 45%),
+    linear-gradient(to bottom, var(--sky-top), var(--sky-bottom));
+  transition:
+    --sky-top 1.2s ease,
+    --sky-bottom 1.2s ease,
+    --glow 1.2s ease,
+    --fg 1.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky {
+    transition: none;
+  }
+}
+
+/* Hover effects (app/components/hero). Resting state is invisible; GSAP
+   positions the layers at the pointer and fades them in on hover. */
+.fx {
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Glare tint per phase (used at sunrise and daylight). */
+:root {
+  --glint-core: rgb(255 255 255 / 0.95);
+  --glint-ray: rgb(255 255 255 / 0.6);
+  --glint-haze: rgb(255 250 230 / 0.3);
+}
+[data-phase="sunrise"] {
+  --glint-core: rgb(255 244 214 / 0.95);
+  --glint-ray: rgb(255 214 150 / 0.6);
+  --glint-haze: rgb(255 196 120 / 0.3);
+}
+
+/* Small four-point glare: a bright core plus two crossed 1px streaks. */
+.fx-glint {
+  background:
+    radial-gradient(circle, var(--glint-core) 0 5%, var(--glint-haze) 18%, transparent 45%),
+    linear-gradient(90deg, transparent, var(--glint-ray), transparent) center / 100% 1px no-repeat,
+    linear-gradient(0deg, transparent, var(--glint-ray), transparent) center / 1px 100% no-repeat;
+  mix-blend-mode: screen;
+}
+
+.fx-flare {
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 255 245 / 0.5), transparent 70%);
+  mix-blend-mode: screen;
+}
+
+.fx-glow {
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--glow), transparent 65%);
+}
+
+.fx-ember {
+  opacity: 0;
+  border-radius: 50%;
+  background: rgb(255 205 150);
+  box-shadow: 0 0 3px 1px rgb(255 150 80 / 0.6);
+}
+
+/* Tiny night star: bright point plus a cool four-point twinkle. */
+.fx-spark {
+  background:
+    radial-gradient(circle, rgb(255 255 255) 0 12%, rgb(210 225 255 / 0.4) 25%, transparent 50%),
+    linear-gradient(90deg, transparent, rgb(225 235 255 / 0.85), transparent) center / 100% 1px no-repeat,
+    linear-gradient(0deg, transparent, rgb(225 235 255 / 0.85), transparent) center / 1px 100% no-repeat;
 }
