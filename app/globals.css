@@ -71,6 +71,30 @@ body {
     --fg 1.2s ease;
 }
 
+/* Fades the bottom of the sky into the dark section (neutral-950). Eased
+   stops avoid the visible start line a straight linear ramp produces. */
+.sky-fade {
+  background: linear-gradient(
+    to bottom,
+    oklch(14.5% 0 0 / 0) 0%,
+    oklch(14.5% 0 0 / 0.013) 8.1%,
+    oklch(14.5% 0 0 / 0.049) 15.5%,
+    oklch(14.5% 0 0 / 0.104) 22.5%,
+    oklch(14.5% 0 0 / 0.175) 29%,
+    oklch(14.5% 0 0 / 0.259) 35.3%,
+    oklch(14.5% 0 0 / 0.352) 41.2%,
+    oklch(14.5% 0 0 / 0.45) 47.1%,
+    oklch(14.5% 0 0 / 0.55) 52.9%,
+    oklch(14.5% 0 0 / 0.648) 58.8%,
+    oklch(14.5% 0 0 / 0.741) 64.7%,
+    oklch(14.5% 0 0 / 0.825) 71%,
+    oklch(14.5% 0 0 / 0.896) 77.5%,
+    oklch(14.5% 0 0 / 0.951) 84.5%,
+    oklch(14.5% 0 0 / 0.987) 91.9%,
+    oklch(14.5% 0 0) 100%
+  );
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sky {
     transition: none;
