@@ -1,4 +1,5 @@
 import { HeroEffects } from "@/app/components/hero/hero-effects";
+import { InfoTip } from "@/app/components/info-tip";
 import { PhaseSelect } from "@/app/components/phase-select";
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
         </h1>
       </HeroEffects>
       <PhaseSelect className="absolute right-4 top-4" />
+      <InfoTip className="absolute bottom-4 right-4" />
     </main>
   );
 }
