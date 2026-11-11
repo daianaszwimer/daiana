@@ -12,6 +12,12 @@ import seaLion from "@/public/gallery/sea-lion.jpg";
 export type FrameKind = "gilt" | "black" | "oak" | "mat" | "float";
 export type HangSize = "S" | "M" | "L";
 
+/** Series of paintings hung together in one room on /gallery. */
+export const COLLECTIONS = {
+  "argentinas-fauna": { title: "Argentina’s Fauna", status: "Ongoing series" },
+} as const;
+export type CollectionId = keyof typeof COLLECTIONS;
+
 /** Fractions of the photo to hide on each side (easel, table, fingers). */
 type Crop = { t: number; r: number; b: number; l: number };
 
@@ -24,6 +30,8 @@ export type Artwork = {
   frame: FrameKind;
   size: HangSize;
   crop: Crop;
+  /** Set to hang the painting with its series instead of in its own room. */
+  collection?: CollectionId;
 };
 
 const crop = (t: number, r: number, b: number, l: number): Crop => ({ t, r, b, l });
@@ -98,6 +106,7 @@ export const ARTWORKS: Artwork[] = [
     frame: "oak",
     size: "S",
     crop: crop(0.235, 0.17, 0.205, 0.065),
+    collection: "argentinas-fauna",
   },
   {
     id: "penguins",
@@ -108,6 +117,7 @@ export const ARTWORKS: Artwork[] = [
     frame: "black",
     size: "S",
     crop: crop(0.215, 0.13, 0.22, 0.095),
+    collection: "argentinas-fauna",
   },
   {
     id: "sea-lion",
@@ -118,6 +128,7 @@ export const ARTWORKS: Artwork[] = [
     frame: "oak",
     size: "S",
     crop: crop(0.25, 0.165, 0.21, 0.095),
+    collection: "argentinas-fauna",
   },
 ];
 
