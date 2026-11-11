@@ -23,7 +23,9 @@ export function setupReveal(root: HTMLElement | null) {
   );
   root.querySelectorAll("[data-reveal]").forEach((el) => io.observe(el));
 
-  root.querySelectorAll<HTMLImageElement>(".g-window img").forEach((img) => {
+  // Every image in the gallery is a painting. (Class names are hashed by the
+  // CSS Module, so the script can't select by class.)
+  root.querySelectorAll("img").forEach((img) => {
     const done = () => img.setAttribute("data-loaded", "");
     if (img.complete) return done();
     img.addEventListener("load", done, { once: true });

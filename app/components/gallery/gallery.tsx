@@ -5,6 +5,7 @@ import { ARTWORKS, COLLECTIONS, type Artwork, type CollectionId } from "@/app/li
 import { Frame, frameHeightRatio } from "./frame";
 import { InlineScript } from "@/app/components/inline-script";
 import { revealScript, setupReveal } from "./reveal";
+import styles from "./gallery.module.css";
 
 // Hang order. Paintings in a collection are pulled out and hung together in
 // their series room after the standalone works, in this same order.
@@ -74,9 +75,8 @@ export function Gallery() {
       <div
         ref={root}
         id={id}
-        data-page="gallery"
         suppressHydrationWarning
-        className="bg-[#ebe7df] text-[#1d1b18]"
+        className={`${styles.page} bg-[#ebe7df] text-[#1d1b18]`}
       >
         <p
           aria-hidden
@@ -116,7 +116,7 @@ export function Gallery() {
               <div
                 data-reveal
                 suppressHydrationWarning
-                className={`relative w-(--w-mobile) shrink-0 md:w-(--w-desktop) ${place.self}`}
+                className={`${styles.reveal} relative w-(--w-mobile) shrink-0 md:w-(--w-desktop) ${place.self}`}
                 style={
                   {
                     "--w-desktop": `min(${box.w}vw, calc(${box.h}dvh / ${frameHeightRatio(art)}))`,
@@ -129,7 +129,7 @@ export function Gallery() {
               <div
                 data-reveal
                 suppressHydrationWarning
-                className={`relative max-w-xs ${centered ? "md:text-center" : ""}`}
+                className={`${styles.reveal} relative max-w-xs ${centered ? "md:text-center" : ""}`}
               >
                 <p className="font-mono text-xs tabular-nums opacity-50">{pad(i + 1)}</p>
                 <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">{art.title}</h2>
@@ -179,7 +179,7 @@ function SeriesRoom({
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_46%_at_50%_56%,rgb(255_253_248/0.95),transparent_72%)]"
       />
-      <header data-reveal suppressHydrationWarning className="relative text-center">
+      <header data-reveal suppressHydrationWarning className={`${styles.reveal} relative text-center`}>
         <p className="font-mono text-xs uppercase tracking-[0.2em] opacity-50">Collection</p>
         <h2 className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl">{title}</h2>
         <p className="mt-3 text-sm opacity-60">
@@ -193,7 +193,7 @@ function SeriesRoom({
             key={art.id}
             data-reveal
             suppressHydrationWarning
-            className="flex flex-col items-center gap-4"
+            className={`${styles.reveal} flex flex-col items-center gap-4`}
           >
             <div
               className="w-[min(64vw,calc(34dvh/var(--r)))] sm:w-[min(22vw,calc(34dvh/var(--r)))]"

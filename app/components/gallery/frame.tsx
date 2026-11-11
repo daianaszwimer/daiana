@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import { aspect, type Artwork } from "@/app/lib/artworks";
+import styles from "./gallery.module.css";
 
 /**
  * A framed painting. The caller sets the width (via `className` or `style`);
@@ -26,11 +27,11 @@ export function Frame({
 
   const painting = (
     <div
-      className="g-window"
+      className={styles.window}
       style={
         {
           aspectRatio: aspect(art),
-          "--g-blur": `url(${art.image.blurDataURL})`,
+          "--blur": `url(${art.image.blurDataURL})`,
         } as CSSProperties
       }
     >
@@ -55,12 +56,12 @@ export function Frame({
 
   return (
     <div
-      className={`g-frame g-frame--${art.frame} ${className}`}
+      className={`${styles.frame} ${styles[art.frame]} ${className}`}
       style={{ "--ar": aspect(art), ...style } as CSSProperties}
     >
-      <div className="g-moulding">
+      <div className={styles.moulding}>
         {art.frame === "mat" || art.frame === "float" ? (
-          <div className="g-inset">{painting}</div>
+          <div className={styles.inset}>{painting}</div>
         ) : (
           painting
         )}
