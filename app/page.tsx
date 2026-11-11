@@ -1,6 +1,21 @@
 import { HeroEffects } from "@/app/components/hero/hero-effects";
 import { InfoTip } from "@/app/components/info-tip";
 import { PhaseSelect } from "@/app/components/phase-select";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: { absolute: 'Daiana Szwimer' },
+  alternates: { canonical: '/' },
+  openGraph: {
+    siteName: 'Daiana Szwimer',
+    type: 'profile',
+    url: '/',
+    title: 'Daiana Szwimer',
+    description: 'Senior product engineer based in Buenos Aires, focused on frontend. Building great apps for the web.',
+    firstName: 'Daiana',
+    lastName: 'Szwimer',
+  },
+}
 
 const SECTIONS = [
   {
@@ -31,9 +46,50 @@ const SECTIONS = [
   },
 ];
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': 'https://www.daiana.dev/#person',
+      name: 'Daiana Szwimer',
+      url: 'https://www.daiana.dev',
+      image: 'https://www.daiana.dev/opengraph-image',
+      jobTitle: 'Senior Software Engineer',
+      worksFor: { '@type': 'Organization', name: 'Daffy' },
+      alumniOf: {
+        '@type': 'CollegeOrUniversity',
+        name: 'Universidad Tecnológica Nacional',
+      },
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Buenos Aires',
+        addressCountry: 'AR',
+      },
+      knowsAbout: ['React', 'Remix', 'Next.js', 'TypeScript', 'Ruby on Rails', 'Frontend architecture'],
+      sameAs: [
+        'https://github.com/daianaszwimer',
+        'https://www.linkedin.com/in/daiana-szwimer/',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.daiana.dev/#website',
+      url: 'https://www.daiana.dev',
+      name: 'Daiana Szwimer',
+      author: { '@id': 'https://www.daiana.dev/#person' },
+    },
+  ],
+}
+
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
+      />
       <main className="sky relative h-[calc(100dvh+8rem)] w-full overflow-hidden">
         <HeroEffects className="grid size-full place-items-center pb-32">
           <h1 className="select-none px-4 text-center text-[clamp(4rem,18vw,16rem)] font-semibold leading-none tracking-tight text-[var(--fg)]">

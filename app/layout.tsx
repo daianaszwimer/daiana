@@ -14,9 +14,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Daiana",
-  description: "Daiana's corner of the internet.",
-};
+  metadataBase: new URL('https://www.daiana.dev'),
+  title: {
+    default: 'Daiana Szwimer',
+    template: '%s · Daiana Szwimer',
+  },
+  description:
+      'Senior product engineer based in Buenos Aires, focused on frontend. Building great apps for the web.',
+  authors: [{ name: 'Daiana Szwimer', url: 'https://www.daiana.dev' }],
+  openGraph: {
+    siteName: 'Daiana Szwimer',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: { card: 'summary_large_image' },
+}
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
