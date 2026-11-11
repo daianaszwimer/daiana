@@ -1,13 +1,13 @@
 import type { StaticImageData } from "next/image";
-import crosswalk from "@/public/gallery/8A156B11-8611-4049-8510-F22BA558C642_1_102_a.jpg";
-import yellowHouse from "@/public/gallery/D25090DD-6641-4C18-A0D9-6055EA1A5ED7_1_105_c.jpg";
-import asakusa from "@/public/gallery/25DDAFEA-6262-492F-B1D2-3594E173F62F_1_105_c.jpg";
-import ducks from "@/public/gallery/304868C8-C10D-4B37-B707-1C3462AD575B_1_105_c.jpg";
-import coastRoad from "@/public/gallery/420574B2-F2BC-4246-BA5D-7FC38ADB7B59_1_105_c.jpg";
-import cupid from "@/public/gallery/C21CB5BD-68B2-4B25-AEF3-D9FAEE480F37_1_105_c.jpg";
-import kiskadee from "@/public/gallery/54A8A561-7222-4111-92CB-A16F49F5D147_1_105_c.jpg";
-import penguins from "@/public/gallery/Pasted 2026-11-10 at 8.18.36 PM.jpg";
-import seaLion from "@/public/gallery/Pasted 2026-11-10 at 8.18.45 PM.jpg";
+import crosswalk from "@/public/gallery/crosswalk.jpg";
+import yellowHouse from "@/public/gallery/yellow-house.jpg";
+import asakusa from "@/public/gallery/asakusa.jpg";
+import ducks from "@/public/gallery/ducks.jpg";
+import coastRoad from "@/public/gallery/coast-road.jpg";
+import cupid from "@/public/gallery/cupid.jpg";
+import kiskadee from "@/public/gallery/kiskadee.jpg";
+import penguins from "@/public/gallery/penguins.jpg";
+import seaLion from "@/public/gallery/sea-lion.jpg";
 
 export type FrameKind = "gilt" | "black" | "oak" | "mat" | "float";
 export type HangSize = "S" | "M" | "L";
@@ -57,7 +57,7 @@ export const ARTWORKS: Artwork[] = [
     medium: "Acrylic on canvas",
     frame: "float",
     size: "M",
-    crop: crop(0.03, 0.075, 0.025, 0.06),
+    crop: crop(0.04, 0.085, 0.02, 0.085),
   },
   {
     id: "ducks",
@@ -97,7 +97,7 @@ export const ARTWORKS: Artwork[] = [
     medium: "Acrylic on canvas",
     frame: "oak",
     size: "S",
-    crop: crop(0.05, 0.08, 0.1, 0.06),
+    crop: crop(0.235, 0.17, 0.205, 0.065),
   },
   {
     id: "penguins",
@@ -107,7 +107,7 @@ export const ARTWORKS: Artwork[] = [
     medium: "Acrylic on canvas board",
     frame: "black",
     size: "S",
-    crop: crop(0.08, 0.08, 0.09, 0.07),
+    crop: crop(0.215, 0.13, 0.22, 0.095),
   },
   {
     id: "sea-lion",
@@ -117,7 +117,7 @@ export const ARTWORKS: Artwork[] = [
     medium: "Acrylic on canvas board",
     frame: "oak",
     size: "S",
-    crop: crop(0.05, 0.05, 0.06, 0.05),
+    crop: crop(0.25, 0.165, 0.21, 0.095),
   },
 ];
 
