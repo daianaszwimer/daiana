@@ -140,12 +140,56 @@
   }
 }
 
+/* ---------- Closing sparkle ---------- */
+.sparkle {
+  display: inline-block;
+  width: 0.75em;
+  height: 0.75em;
+  margin-left: 0.4em;
+  vertical-align: 0.5em;
+  fill: #a07b34;
+}
+/* One glint after the line lands, then it rests. Like the reveal, the hidden
+   start only applies once the script has run. */
+.page[data-reveal-ready] .reveal .sparkle {
+  opacity: 0;
+}
+.page[data-reveal-ready] .reveal[data-shown] .sparkle {
+  animation: sparkle 700ms var(--ease-reveal) 500ms both;
+}
+@keyframes sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(-30deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.15) rotate(6deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     transition: opacity 400ms ease-out;
   }
   .page[data-reveal-ready] .reveal:not([data-shown]) {
     transform: none;
+  }
+  .page[data-reveal-ready] .reveal[data-shown] .sparkle {
+    animation-name: sparkle-fade;
+    animation-duration: 400ms;
+  }
+}
+@keyframes sparkle-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 

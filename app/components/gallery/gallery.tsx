@@ -137,7 +137,12 @@ export function Gallery() {
         })}
 
         <section className="flex min-h-[60dvh] items-center justify-center px-6 pb-24 text-sm opacity-70">
-          End of exhibition
+          <p data-reveal suppressHydrationWarning className={styles.reveal}>
+            End of exhibition
+            <svg aria-hidden viewBox="0 0 16 16" className={styles.sparkle}>
+              <path d="M8 0C8.6 5 11 7.4 16 8C11 8.6 8.6 11 8 16C7.4 11 5 8.6 0 8C5 7.4 7.4 5 8 0Z" />
+            </svg>
+          </p>
         </section>
       </main>
       <RevealSetup galleryId={GALLERY_ID} />
