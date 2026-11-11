@@ -95,12 +95,6 @@ body {
   );
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .sky {
-    transition: none;
-  }
-}
-
 /* Hover effects (app/components/hero). Resting state is invisible; GSAP
    positions the layers at the pointer and fades them in on hover. */
 .fx {

@@ -82,7 +82,7 @@ export const EFFECTS: Record<Phase, (gsap: Gsap, q: Select) => Timeline> = {
       .timeline()
       .fromTo(
         spark,
-        { opacity: 0, scale: 0, rotation: -30 },
+        { opacity: 0, scale: 0.6, rotation: -30 },
         { opacity: 1, scale: 1, rotation: 0, duration: 0.6, ease: "back.out(2)" },
         0,
       )

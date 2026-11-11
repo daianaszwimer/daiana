@@ -132,6 +132,13 @@
 .seriesRow > .reveal {
   transition-delay: calc(240ms + var(--i, 0) * 160ms);
 }
+/* Phones wrap the series two per row and each row reveals on its own scroll,
+   so the stagger runs per column instead of across the whole series. */
+@media (width < 40rem) {
+  .seriesRow > .reveal {
+    transition-delay: calc(mod(var(--i, 0), 2) * 160ms);
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .reveal {

@@ -36,7 +36,7 @@ export default function Home() {
     <>
       <main className="sky relative h-[calc(100dvh+8rem)] w-full overflow-hidden">
         <HeroEffects className="grid size-full place-items-center pb-32">
-          <h1 className="select-none px-4 text-center text-[clamp(4rem,18vw,16rem)] font-semibold leading-none tracking-tight text-[var(--fg)] transition-colors duration-1000">
+          <h1 className="select-none px-4 text-center text-[clamp(4rem,18vw,16rem)] font-semibold leading-none tracking-tight text-[var(--fg)]">
             Daiana
           </h1>
         </HeroEffects>
