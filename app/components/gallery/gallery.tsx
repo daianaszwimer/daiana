@@ -1,30 +1,35 @@
-"use client";
-
-import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import { ARTWORKS, COLLECTIONS, type Artwork, type CollectionId } from "@/app/lib/artworks";
 import { Frame, frameHeightRatio } from "./frame";
-import { InlineScript } from "@/app/components/inline-script";
-import { revealScript, setupReveal } from "./reveal";
+import { RevealSetup, RoomCounter } from "./gallery-client";
 import styles from "./gallery.module.css";
 
-// Hang order. Paintings in a collection are pulled out and hung together in
-// their series room after the standalone works, in this same order.
+/** The gallery's root id, used by the reveal script and the room counter. */
+const GALLERY_ID = "gallery";
+
+// Hang order: series rooms first, then standalone works newest year first.
+// Within a series or a year, paintings follow this list.
 const ORDER = [
   "crosswalk",
+  "cupid",
   "yellow-house",
   "ducks",
   "asakusa",
   "coast-road",
-  "cupid",
   "penguins",
   "sea-lion",
   "kiskadee",
+  "aguara-guazu",
 ];
 const HUNG = ORDER.map((id) => ARTWORKS.find((a) => a.id === id)!);
-const SOLO = HUNG.filter((a) => !a.collection);
+// Array sort is stable, so ORDER still decides within the same year.
+const SOLO = HUNG.filter((a) => !a.collection).sort((a, b) => Number(b.year) - Number(a.year));
 const SERIES = (Object.keys(COLLECTIONS) as CollectionId[])
   .map((id) => ({ id, ...COLLECTIONS[id], works: HUNG.filter((a) => a.collection === id) }))
   .filter((c) => c.works.length > 0);
+/** Width / height every work in a series is shown at. */
+const SERIES_FORMAT = 1;
+const SERIES_TOTAL = SERIES.reduce((n, c) => n + c.works.length, 0);
 
 /** Max frame width (vw) and height (dvh) per hang size; the tighter one wins. */
 const BOX = {
@@ -45,45 +50,19 @@ const pad = (n: number) => String(n).padStart(2, "0");
 const WORDS = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
 const count = (n: number) => WORDS[n] ?? String(n);
 
+/**
+ * Server Component: the rooms are static markup. Only the room counter and
+ * the reveal setup run on the client (see ./gallery-client).
+ */
 export function Gallery() {
-  const id = useId();
-  const root = useRef<HTMLElement>(null);
-  // Counter label of the centered room, e.g. "03" or "07–09" for a series.
-  const [current, setCurrent] = useState("—");
-
-  // On hard navigations the inline script below has already run (no-op here).
-  // On client-side navigations it doesn't run, so set up before first paint.
-  useLayoutEffect(() => setupReveal(root.current), []);
-
-  // Track which room is centered for the counter.
-  useEffect(() => {
-    const rooms = root.current!.querySelectorAll<HTMLElement>("[data-room]");
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) setCurrent((e.target as HTMLElement).dataset.room || "—");
-        }
-      },
-      { rootMargin: "-45% 0px -45% 0px" },
-    );
-    rooms.forEach((r) => io.observe(r));
-    return () => io.disconnect();
-  }, []);
-
   return (
     <>
       <main
-        ref={root}
-        id={id}
+        id={GALLERY_ID}
         suppressHydrationWarning
         className={`${styles.page} bg-[#ebe7df] text-[#1d1b18]`}
       >
-        <p
-          aria-hidden
-          className="fixed left-6 top-6 z-10 font-mono text-xs tabular-nums tracking-wider opacity-70 md:left-10 md:top-8"
-        >
-          {current} / {pad(HUNG.length)}
-        </p>
+        <RoomCounter galleryId={GALLERY_ID} total={pad(HUNG.length)} />
 
         <section data-room="" className="flex min-h-dvh flex-col justify-end px-6 pb-[18dvh] md:px-[8vw]">
           <h1 className="text-[clamp(3.5rem,11vw,10rem)] font-semibold leading-[0.9] tracking-tight">
@@ -92,21 +71,27 @@ export function Gallery() {
           <div className="mt-8 flex flex-wrap gap-x-10 gap-y-2 text-sm opacity-70">
             <span>
               {SERIES.length > 0
-                ? `${count(SOLO.length)} works and a series in progress, 2025`
-                : `${count(SOLO.length)} works, 2025`}
+                ? `${count(SOLO.length)} works and a series in progress, 2025 & 2026`
+                : `${count(SOLO.length)} works, 2025 & 2026`}
             </span>
-            <span>Acrylic on canvas and paper</span>
+            <span>Acrylic on canvas and paper. Oil on canvas.</span>
           </div>
         </section>
 
+        {SERIES.map((series, s) => {
+          const first = 1 + SERIES.slice(0, s).reduce((n, c) => n + c.works.length, 0);
+          return <SeriesRoom key={series.id} {...series} first={first} eager={s === 0} />;
+        })}
+
         {SOLO.map((art, i) => {
+          const n = SERIES_TOTAL + i + 1;
           const box = BOX[art.size];
           const place = PLACEMENT[i % PLACEMENT.length];
           const centered = i % PLACEMENT.length === 2;
           return (
             <section
               key={art.id}
-              data-room={pad(i + 1)}
+              data-room={pad(n)}
               className={`relative flex min-h-[92dvh] flex-col items-center justify-center gap-8 px-6 py-[10dvh] md:gap-[4vw] md:px-[8vw] ${place.row}`}
             >
               <div
@@ -124,14 +109,24 @@ export function Gallery() {
                   } as CSSProperties
                 }
               >
-                <Frame art={art} sizes={`(min-width: 768px) ${box.w}vw, ${box.mw}vw`} eager={i === 0} />
+                <Frame
+                  art={art}
+                  widths={[
+                    {
+                      media: "(min-width: 768px)",
+                      width: `min(${box.w}vw, ${(box.h / frameHeightRatio(art)).toFixed(1)}vh)`,
+                    },
+                    { width: `min(${box.mw}vw, ${(box.h / frameHeightRatio(art)).toFixed(1)}vh)` },
+                  ]}
+                  eager={SERIES.length === 0 && i === 0}
+                />
               </div>
               <div
                 data-reveal
                 suppressHydrationWarning
                 className={`${styles.reveal} relative max-w-xs ${centered ? "md:text-center" : ""}`}
               >
-                <p className="font-mono text-xs tabular-nums opacity-70">{pad(i + 1)}</p>
+                <p className="font-mono text-xs tabular-nums opacity-70">{pad(n)}</p>
                 <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">{art.title}</h2>
                 <p className="mt-2 text-sm opacity-70">
                   {art.medium}, {art.year}
@@ -141,17 +136,11 @@ export function Gallery() {
           );
         })}
 
-        {SERIES.map((series, s) => {
-          const first = SOLO.length + 1 + SERIES.slice(0, s).reduce((n, c) => n + c.works.length, 0);
-          return <SeriesRoom key={series.id} {...series} first={first} />;
-        })}
-
         <section className="flex min-h-[60dvh] items-center justify-center px-6 pb-24 text-sm opacity-70">
           End of exhibition
         </section>
       </main>
-      {/* Runs during HTML parsing, so paintings reveal before React hydrates. */}
-      <InlineScript html={revealScript(id)} />
+      <RevealSetup galleryId={GALLERY_ID} />
     </>
   );
 }
@@ -162,14 +151,22 @@ function SeriesRoom({
   status,
   works,
   first,
+  eager = false,
 }: {
   title: string;
   status: string;
   works: Artwork[];
-  /** 1-based number of the first work, continuing from the standalone rooms. */
+  /** 1-based number of the first work in this series. */
   first: number;
+  /** Load the first work right away (it's the first painting on the page). */
+  eager?: boolean;
 }) {
   const last = first + works.length - 1;
+  // Side by side from 640px up: each frame shares the row (84vw minus 4vw
+  // gaps), capped at 22vw. Phones wrap two per row.
+  const rowWidth = Math.min(22, (84 - (works.length - 1) * 4) / works.length);
+  // Every work in a series is shown square, so with equal widths every frame is
+  // an identical square whatever its moulding (see Frame's `format`).
   return (
     <section
       data-room={`${pad(first)}–${pad(last)}`}
@@ -187,19 +184,30 @@ function SeriesRoom({
         </p>
       </header>
 
-      <div className="relative flex w-full flex-col items-center gap-12 sm:flex-row sm:items-start sm:justify-center sm:gap-[4vw]">
+      <div
+        className={`${styles.seriesRow} relative flex w-full flex-wrap justify-center gap-x-[6vw] gap-y-10 sm:flex-nowrap sm:items-start sm:gap-[4vw]`}
+      >
         {works.map((art, i) => (
           <figure
             key={art.id}
             data-reveal
             suppressHydrationWarning
-            className={`${styles.reveal} flex flex-col items-center gap-4`}
+            className={`${styles.reveal} flex max-w-[40vw] flex-col items-center gap-4 sm:max-w-none`}
+            style={{ "--i": i } as CSSProperties}
           >
             <div
-              className="w-[min(64vw,calc(34dvh/var(--r)))] sm:w-[min(22vw,calc(34dvh/var(--r)))]"
-              style={{ "--r": frameHeightRatio(art) } as CSSProperties}
+              className="w-[min(40vw,30dvh)] sm:w-[min(var(--row),34dvh)]"
+              style={{ "--row": `${rowWidth}vw` } as CSSProperties}
             >
-              <Frame art={art} sizes="(min-width: 640px) 22vw, 64vw" />
+              <Frame
+                art={art}
+                widths={[
+                  { media: "(min-width: 640px)", width: `min(${rowWidth}vw, 34vh)` },
+                  { width: "min(40vw, 30vh)" },
+                ]}
+                format={SERIES_FORMAT}
+                eager={eager && i === 0}
+              />
             </div>
             <figcaption className="text-center text-sm">
               <span className="font-mono text-xs tabular-nums opacity-70">{pad(first + i)}</span>

@@ -127,6 +127,11 @@
 .reveal ~ .reveal {
   transition-delay: 120ms;
 }
+/* Series room: the title lands first, then each painting in turn (--i is the
+   painting's index). Comes after the rule above so it wins in the series row. */
+.seriesRow > .reveal {
+  transition-delay: calc(240ms + var(--i, 0) * 160ms);
+}
 
 @media (prefers-reduced-motion: reduce) {
   .reveal {

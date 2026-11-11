@@ -9,28 +9,46 @@ import styles from "./gallery.module.css";
  */
 export function Frame({
   art,
-  sizes,
+  widths,
   className = "",
   style,
   eager = false,
+  format,
 }: {
   art: Artwork;
-  sizes: string;
+  /**
+   * The frame's CSS width at each breakpoint, last one without a media query,
+   * e.g. `[{ media: "(min-width: 768px)", width: "min(46vw, 60vh)" }, { width: "84vw" }]`.
+   * Used to build the image's `sizes` so the browser downloads the right file.
+   */
+  widths: { media?: string; width: string }[];
   className?: string;
   style?: CSSProperties;
   /** Load right away instead of lazily (for the likely LCP image). */
   eager?: boolean;
+  /**
+   * Show the painting at this width / height instead of its own, trimming
+   * evenly from the longer side (never stretching). Lets a series share one
+   * format so every frame in it is the same size.
+   */
+  format?: number;
 }) {
-  const { crop: c } = art;
+  const c = format ? fitCrop(art, format) : art.crop;
   const w = 1 - c.l - c.r;
   const h = 1 - c.t - c.b;
+  // The image is drawn wider than the frame: the frame's padding (moulding,
+  // mat) is removed, then the photo is enlarged so its cropped edges overflow.
+  const scale = ((1 - 2 * FRAME_PAD[art.frame]) / w).toFixed(3);
+  const sizes = widths
+    .map(({ media, width }) => `${media ? `${media} ` : ""}calc(${width} * ${scale})`)
+    .join(", ");
 
   const painting = (
     <div
       className={styles.window}
       style={
         {
-          aspectRatio: aspect(art),
+          aspectRatio: format ?? aspect(art),
           "--blur": `url(${art.image.blurDataURL})`,
         } as CSSProperties
       }
@@ -70,6 +88,18 @@ export function Frame({
   );
 }
 
+/** The painting's crop, trimmed evenly on its longer side to reach `target`. */
+function fitCrop({ image, crop: c }: Artwork, target: number) {
+  const w = 1 - c.l - c.r;
+  const h = 1 - c.t - c.b;
+  const current = (image.width * w) / (image.height * h);
+  if (current > target) {
+    const trim = (w - (target * image.height * h) / image.width) / 2;
+    return { ...c, l: c.l + trim, r: c.r + trim };
+  }
+  const trim = (h - (image.width * w) / (target * image.height)) / 2;
+  return { ...c, t: c.t + trim, b: c.b + trim };
+}
 
 /** Total padding per side (moulding + mat/gap) as a fraction of frame width. */
 const FRAME_PAD: Record<Artwork["frame"], number> = {

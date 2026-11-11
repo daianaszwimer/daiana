@@ -1,20 +1,21 @@
 import type { StaticImageData } from "next/image";
-import crosswalk from "@/public/gallery/crosswalk.jpg";
-import yellowHouse from "@/public/gallery/yellow-house.jpg";
-import asakusa from "@/public/gallery/asakusa.jpg";
-import ducks from "@/public/gallery/ducks.jpg";
-import coastRoad from "@/public/gallery/coast-road.jpg";
-import cupid from "@/public/gallery/cupid.jpg";
-import kiskadee from "@/public/gallery/kiskadee.jpg";
-import penguins from "@/public/gallery/penguins.jpg";
-import seaLion from "@/public/gallery/sea-lion.jpg";
+import crosswalk from "./paintings/crosswalk.jpg";
+import yellowHouse from "./paintings/yellow-house.jpg";
+import asakusa from "./paintings/asakusa.jpg";
+import ducks from "./paintings/ducks.jpg";
+import coastRoad from "./paintings/coast-road.jpg";
+import cupid from "./paintings/cupid.jpg";
+import kiskadee from "./paintings/kiskadee.jpg";
+import penguins from "./paintings/penguins.jpg";
+import seaLion from "./paintings/sea-lion.jpg";
+import aguaraGuazu from "./paintings/aguara-guazu.jpg";
 
 export type FrameKind = "gilt" | "black" | "oak" | "mat" | "float";
 export type HangSize = "S" | "M" | "L";
 
 /** Series of paintings hung together in one room on /gallery. */
 export const COLLECTIONS = {
-  "argentinas-fauna": { title: "Argentina’s Fauna", status: "Ongoing series" },
+  "argentinas-fauna": { title: "Argentina’s Fauna", status: "Ongoing series · 2026" },
 } as const;
 export type CollectionId = keyof typeof COLLECTIONS;
 
@@ -45,7 +46,7 @@ export const ARTWORKS: Artwork[] = [
     title: "Crosswalk at Noon",
     description:
       "Overhead view of people crossing a zebra crossing at midday, each trailing a long deep-blue shadow across the white stripes.",
-    year: "2025",
+    year: "2026",
     medium: "Acrylic on paper",
     frame: "mat",
     size: "L",
@@ -54,9 +55,9 @@ export const ARTWORKS: Artwork[] = [
   {
     id: "yellow-house",
     image: yellowHouse,
-    title: "The Yellow House",
+    title: "My grandparents house",
     description:
-      "A yellow house with a red tiled roof behind a black iron gate, a tree throwing its shadow across the facade and the tiled sidewalk.",
+      "A yellow house with a red tiled roof behind a black iron gate, a tree throwing its shadow across the facade and the tiled sidewalk. A person is opening the gate from the inside.",
     year: "2025",
     medium: "Acrylic on canvas",
     frame: "gilt",
@@ -69,7 +70,7 @@ export const ARTWORKS: Artwork[] = [
     title: "Asakusa, Three Friends",
     description:
       "Three women in floral yukata, seen from behind, standing on a stone plaza before a large red temple gate under a blue sky.",
-    year: "2025",
+    year: "2026",
     medium: "Acrylic on canvas",
     frame: "float",
     size: "M",
@@ -78,11 +79,11 @@ export const ARTWORKS: Artwork[] = [
   {
     id: "ducks",
     image: ducks,
-    title: "Ladies Who Lunch",
+    title: "Ladies' Night",
     description:
-      "Two yellow ducks in polka-dot headscarves and red cat-eye sunglasses sharing red wine at a green table against a pink wall.",
+      "Two yellow ducks in polka-dot headscarves and red cat-eye sunglasses share red wine and ice cream at a green table against a pink wall. On the table are a bottle of wine, two glasses, two bowls of ice cream, a big ice cream tub and an open box of Havanna alfajores.",
     year: "2025",
-    medium: "Acrylic on paper",
+    medium: "Acrylic on paper. Unfinished",
     frame: "black",
     size: "M",
     crop: crop(0.025, 0.03, 0.02, 0.03),
@@ -92,7 +93,7 @@ export const ARTWORKS: Artwork[] = [
     image: coastRoad,
     title: "Coast Road",
     description:
-      "A small blue car driving down a dirt road between rows of bright flowers and the sea, under purple clouds.",
+      "A small blue car driving down a dirt road between rows of bright flowers and the sea.",
     year: "2025",
     medium: "Acrylic on paper",
     frame: "mat",
@@ -104,9 +105,9 @@ export const ARTWORKS: Artwork[] = [
     image: cupid,
     title: "Cupid in the Garden",
     description:
-      "A winged cupid seated on a stone ledge in a garden, looking down at a small violet flower.",
+      "A winged cupid seated on a stone ledge in a garden, looking down at a small violet butterfly. His arrows lie horizontally in the background on the right.",
     year: "2025",
-    medium: "Acrylic on canvas",
+    medium: "Oil on canvas",
     frame: "gilt",
     size: "M",
     crop: crop(0.02, 0.06, 0.04, 0.05),
@@ -117,7 +118,7 @@ export const ARTWORKS: Artwork[] = [
     title: "Kiskadee",
     description:
       "A kiskadee with a bright yellow chest and a black-and-white striped head, perched on a branch against dense green leaves.",
-    year: "2025",
+    year: "2026",
     medium: "Acrylic on canvas",
     frame: "oak",
     size: "S",
@@ -127,10 +128,10 @@ export const ARTWORKS: Artwork[] = [
   {
     id: "penguins",
     image: penguins,
-    title: "Penguins at Dusk",
+    title: "Magellanic Penguins",
     description:
       "Two penguins standing close together, one leaning into the other, against an orange and violet sunset.",
-    year: "2025",
+    year: "2026",
     medium: "Acrylic on canvas board",
     frame: "black",
     size: "S",
@@ -143,11 +144,24 @@ export const ARTWORKS: Artwork[] = [
     title: "Sea Lion",
     description:
       "A golden sea lion propped up on its front flippers, head tilted to the sky, among yellow and green rocks.",
-    year: "2025",
+    year: "2026",
     medium: "Acrylic on canvas board",
     frame: "oak",
     size: "S",
     crop: crop(0.25, 0.165, 0.21, 0.095),
+    collection: "argentinas-fauna",
+  },
+  {
+    id: "aguara-guazu",
+    image: aguaraGuazu,
+    title: "Aguará Guazú",
+    description:
+      "A maned wolf with long thin legs and tall ears stands on dark red earth, looking back over its shoulder, in front of green bushes under a purple sky.",
+    year: "2026",
+    medium: "Acrylic on canvas board. In progress",
+    frame: "black",
+    size: "S",
+    crop: crop(0.035, 0.05, 0.035, 0.025),
     collection: "argentinas-fauna",
   },
 ];
