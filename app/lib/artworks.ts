@@ -25,6 +25,8 @@ export type Artwork = {
   id: string;
   image: StaticImageData;
   title: string;
+  /** Alt text: what the painting shows, for people who can't see it. */
+  description: string;
   year: string;
   medium: string;
   frame: FrameKind;
@@ -41,6 +43,8 @@ export const ARTWORKS: Artwork[] = [
     id: "crosswalk",
     image: crosswalk,
     title: "Crosswalk at Noon",
+    description:
+      "Overhead view of people crossing a zebra crossing at midday, each trailing a long deep-blue shadow across the white stripes.",
     year: "2025",
     medium: "Acrylic on paper",
     frame: "mat",
@@ -51,6 +55,8 @@ export const ARTWORKS: Artwork[] = [
     id: "yellow-house",
     image: yellowHouse,
     title: "The Yellow House",
+    description:
+      "A yellow house with a red tiled roof behind a black iron gate, a tree throwing its shadow across the facade and the tiled sidewalk.",
     year: "2025",
     medium: "Acrylic on canvas",
     frame: "gilt",
@@ -61,6 +67,8 @@ export const ARTWORKS: Artwork[] = [
     id: "asakusa",
     image: asakusa,
     title: "Asakusa, Three Friends",
+    description:
+      "Three women in floral yukata, seen from behind, standing on a stone plaza before a large red temple gate under a blue sky.",
     year: "2025",
     medium: "Acrylic on canvas",
     frame: "float",
@@ -71,6 +79,8 @@ export const ARTWORKS: Artwork[] = [
     id: "ducks",
     image: ducks,
     title: "Ladies Who Lunch",
+    description:
+      "Two yellow ducks in polka-dot headscarves and red cat-eye sunglasses sharing red wine at a green table against a pink wall.",
     year: "2025",
     medium: "Acrylic on paper",
     frame: "black",
@@ -81,6 +91,8 @@ export const ARTWORKS: Artwork[] = [
     id: "coast-road",
     image: coastRoad,
     title: "Coast Road",
+    description:
+      "A small blue car driving down a dirt road between rows of bright flowers and the sea, under purple clouds.",
     year: "2025",
     medium: "Acrylic on paper",
     frame: "mat",
@@ -91,6 +103,8 @@ export const ARTWORKS: Artwork[] = [
     id: "cupid",
     image: cupid,
     title: "Cupid in the Garden",
+    description:
+      "A winged cupid seated on a stone ledge in a garden, looking down at a small violet flower.",
     year: "2025",
     medium: "Acrylic on canvas",
     frame: "gilt",
@@ -101,6 +115,8 @@ export const ARTWORKS: Artwork[] = [
     id: "kiskadee",
     image: kiskadee,
     title: "Kiskadee",
+    description:
+      "A kiskadee with a bright yellow chest and a black-and-white striped head, perched on a branch against dense green leaves.",
     year: "2025",
     medium: "Acrylic on canvas",
     frame: "oak",
@@ -112,6 +128,8 @@ export const ARTWORKS: Artwork[] = [
     id: "penguins",
     image: penguins,
     title: "Penguins at Dusk",
+    description:
+      "Two penguins standing close together, one leaning into the other, against an orange and violet sunset.",
     year: "2025",
     medium: "Acrylic on canvas board",
     frame: "black",
@@ -123,6 +141,8 @@ export const ARTWORKS: Artwork[] = [
     id: "sea-lion",
     image: seaLion,
     title: "Sea Lion",
+    description:
+      "A golden sea lion propped up on its front flippers, head tilted to the sky, among yellow and green rocks.",
     year: "2025",
     medium: "Acrylic on canvas board",
     frame: "oak",

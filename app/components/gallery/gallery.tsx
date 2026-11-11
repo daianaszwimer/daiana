@@ -47,7 +47,7 @@ const count = (n: number) => WORDS[n] ?? String(n);
 
 export function Gallery() {
   const id = useId();
-  const root = useRef<HTMLDivElement>(null);
+  const root = useRef<HTMLElement>(null);
   // Counter label of the centered room, e.g. "03" or "07–09" for a series.
   const [current, setCurrent] = useState("—");
 
@@ -72,7 +72,7 @@ export function Gallery() {
 
   return (
     <>
-      <div
+      <main
         ref={root}
         id={id}
         suppressHydrationWarning
@@ -80,7 +80,7 @@ export function Gallery() {
       >
         <p
           aria-hidden
-          className="fixed left-6 top-6 z-10 font-mono text-xs tabular-nums tracking-wider opacity-60 md:left-10 md:top-8"
+          className="fixed left-6 top-6 z-10 font-mono text-xs tabular-nums tracking-wider opacity-70 md:left-10 md:top-8"
         >
           {current} / {pad(HUNG.length)}
         </p>
@@ -89,7 +89,7 @@ export function Gallery() {
           <h1 className="text-[clamp(3.5rem,11vw,10rem)] font-semibold leading-[0.9] tracking-tight">
             Paintings
           </h1>
-          <div className="mt-8 flex flex-wrap gap-x-10 gap-y-2 text-sm opacity-60">
+          <div className="mt-8 flex flex-wrap gap-x-10 gap-y-2 text-sm opacity-70">
             <span>
               {SERIES.length > 0
                 ? `${count(SOLO.length)} works and a series in progress, 2025`
@@ -131,9 +131,9 @@ export function Gallery() {
                 suppressHydrationWarning
                 className={`${styles.reveal} relative max-w-xs ${centered ? "md:text-center" : ""}`}
               >
-                <p className="font-mono text-xs tabular-nums opacity-50">{pad(i + 1)}</p>
+                <p className="font-mono text-xs tabular-nums opacity-70">{pad(i + 1)}</p>
                 <h2 className="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">{art.title}</h2>
-                <p className="mt-2 text-sm opacity-60">
+                <p className="mt-2 text-sm opacity-70">
                   {art.medium}, {art.year}
                 </p>
               </div>
@@ -146,10 +146,10 @@ export function Gallery() {
           return <SeriesRoom key={series.id} {...series} first={first} />;
         })}
 
-        <section className="flex min-h-[60dvh] items-center justify-center px-6 pb-24 text-sm opacity-60">
+        <section className="flex min-h-[60dvh] items-center justify-center px-6 pb-24 text-sm opacity-70">
           End of exhibition
         </section>
-      </div>
+      </main>
       {/* Runs during HTML parsing, so paintings reveal before React hydrates. */}
       <InlineScript html={revealScript(id)} />
     </>
@@ -180,9 +180,9 @@ function SeriesRoom({
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_46%_at_50%_56%,rgb(255_253_248/0.95),transparent_72%)]"
       />
       <header data-reveal suppressHydrationWarning className={`${styles.reveal} relative text-center`}>
-        <p className="font-mono text-xs uppercase tracking-[0.2em] opacity-50">Collection</p>
+        <p className="font-mono text-xs uppercase tracking-[0.2em] opacity-70">Collection</p>
         <h2 className="mt-3 text-4xl font-semibold tracking-tight md:text-5xl">{title}</h2>
-        <p className="mt-3 text-sm opacity-60">
+        <p className="mt-3 text-sm opacity-70">
           {status} · {works.length} {works.length === 1 ? "work" : "works"} so far
         </p>
       </header>
@@ -202,9 +202,9 @@ function SeriesRoom({
               <Frame art={art} sizes="(min-width: 640px) 22vw, 64vw" />
             </div>
             <figcaption className="text-center text-sm">
-              <span className="font-mono text-xs tabular-nums opacity-50">{pad(first + i)}</span>
-              <p className="mt-1 font-medium">{art.title}</p>
-              <p className="opacity-60">{art.medium}</p>
+              <span className="font-mono text-xs tabular-nums opacity-70">{pad(first + i)}</span>
+              <h3 className="mt-1 font-medium">{art.title}</h3>
+              <p className="opacity-70">{art.medium}</p>
             </figcaption>
           </figure>
         ))}

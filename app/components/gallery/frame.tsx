@@ -37,7 +37,7 @@ export function Frame({
     >
       <Image
         src={art.image}
-        alt={`${art.title}, ${art.medium.toLowerCase()}`}
+        alt={art.description}
         sizes={sizes}
         loading={eager ? "eager" : "lazy"}
         draggable={false}
