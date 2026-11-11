@@ -50,6 +50,13 @@ const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
+      '@type': 'ProfilePage',
+      '@id': "https://www.daiana.dev/#profile",
+      url: "https://www.daiana.dev",
+      name: 'Daiana Szwimer',
+      mainEntity: { '@id': "https://www.daiana.dev/#person" },
+    },
+    {
       '@type': 'Person',
       '@id': 'https://www.daiana.dev/#person',
       name: 'Daiana Szwimer',
