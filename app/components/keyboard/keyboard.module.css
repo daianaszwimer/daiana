@@ -133,5 +133,13 @@
 /* Never taller than about 5.5× a white key's width (16 keys, so 6.25cqw each),
    so narrow screens don't stretch the keys into slivers. */
 .keys {
+  position: relative;
+  display: flex;
   flex: 0 0 min(48%, 34cqw);
+}
+
+.strip[hidden],
+.canvas[hidden],
+.readout[hidden] {
+  display: none;
 }

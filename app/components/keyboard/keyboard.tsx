@@ -6,6 +6,8 @@ import { Landscape } from "./landscape";
 import { TIMBRES } from "./synth";
 import { RANGES, clamp, usePiano } from "./use-piano";
 import { KeyBed } from "./key-bed";
+import { Falls, KeyHints, LearnButton, LessonBar, LessonOverlay, SongList } from "./learn";
+import { useLesson } from "./use-lesson";
 import styles from "./keyboard.module.css";
 
 const signed = (n: number) => (n > 0 ? `+${n}` : String(n));
@@ -150,6 +152,9 @@ export function Keyboard() {
     };
   }, []);
 
+  const lesson = useLesson(piano, "wait");
+  const learning = lesson.song !== null;
+
   const shift = s.octave * 12 + s.transpose;
   const held = [...piano.pressed].map((i) => clamp(KEYS[i].midi + shift, 0, 127)).sort((a, b) => a - b);
   const chord = nameChord(held);
@@ -157,7 +162,9 @@ export function Keyboard() {
 
   return (
     <Landscape className={styles.root}>
-      <div className={styles.strip} aria-label="Settings">
+      <LessonBar lesson={lesson} />
+      <div className={styles.strip} aria-label="Settings" hidden={learning}>
+        <LearnButton lesson={lesson} />
         <Step label="Oct" value={s.octave} range={RANGES.octave} format={signed} onChange={(v) => update("octave", v)} />
         <Step label="Trn" value={s.transpose} range={RANGES.transpose} format={signed} onChange={(v) => update("transpose", v)} />
         <Step label="Vel" value={s.velocity} range={RANGES.velocity} step={8} onChange={(v) => update("velocity", v)} />
@@ -192,8 +199,11 @@ export function Keyboard() {
       </div>
 
       <div className={styles.roll}>
-        <canvas ref={canvas} className={styles.canvas} aria-hidden="true" />
-        <div className={styles.readout} aria-live="polite">
+        {/* Hidden, not unmounted, during a lesson so its draw loop keeps its canvas. */}
+        <canvas ref={canvas} className={styles.canvas} aria-hidden="true" hidden={learning} />
+        {learning && <Falls lesson={lesson} />}
+        {learning && <LessonOverlay lesson={lesson} />}
+        <div className={styles.readout} aria-live="polite" hidden={learning}>
           <span className={styles.chord}>{chord ?? (held.length === 1 ? noteName(held[0]) : "—")}</span>
           <span className={styles.notes}>
             {held.length > 0 ? held.map(noteName).join(" ") : piano.lastNote === null ? "play something" : `last ${noteName(piano.lastNote)}`}
@@ -202,7 +212,11 @@ export function Keyboard() {
         </div>
       </div>
 
-      <KeyBed piano={piano} className={styles.keys} />
+      <div className={styles.keys}>
+        <KeyBed piano={piano} />
+        {learning && <KeyHints lesson={lesson} />}
+      </div>
+      <SongList lesson={lesson} />
     </Landscape>
   );
 }

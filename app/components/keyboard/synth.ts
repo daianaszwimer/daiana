@@ -72,7 +72,15 @@ class Synth {
   /** Must first run inside a user gesture so browsers let audio start. */
   private ensure(): { ctx: AudioContext; master: GainNode } {
     if (!this.ctx || !this.master) {
+      // iOS mutes Web Audio under the silent switch unless the page asks to be treated as media playback.
+      const session = (navigator as Navigator & { audioSession?: { type: string } }).audioSession;
+      if (session) session.type = "playback";
       const ctx = new AudioContext({ latencyHint: "interactive" });
+      // Hot reload re-runs this module but leaves the old context open; browsers cap how many
+      // a page may hold, and past the cap new ones stay silent. Close the previous one.
+      const shared = globalThis as { __keyboardAudio?: AudioContext };
+      void shared.__keyboardAudio?.close().catch(() => {});
+      shared.__keyboardAudio = ctx;
       const master = ctx.createGain();
       const limiter = ctx.createDynamicsCompressor();
       limiter.threshold.value = -10;
@@ -82,7 +90,8 @@ class Synth {
       this.ctx = ctx;
       this.master = master;
     }
-    if (this.ctx.state === "suspended") void this.ctx.resume();
+    // Safari can also leave a context "interrupted" (calls, other tabs), not just "suspended".
+    if (this.ctx.state !== "running") void this.ctx.resume();
     return { ctx: this.ctx, master: this.master };
   }
 
@@ -92,7 +101,7 @@ class Synth {
     const now = ctx.currentTime;
     const freq = midiToFreq(midi);
     const patch = PATCHES[timbre];
-    const peak = 0.22 * (0.15 + 0.85 * velocity);
+    const peak = 0.4 * (0.15 + 0.85 * velocity);
 
     const out = ctx.createGain();
     out.gain.setValueAtTime(0, now);
