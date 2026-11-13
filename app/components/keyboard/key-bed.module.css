@@ -1,0 +1,73 @@
+.bed {
+  --accent: #4ade80;
+  --accent-ink: #052e14;
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: #26262a;
+  touch-action: none;
+  cursor: pointer;
+  container-type: size;
+  font-family: var(--font-mono);
+}
+
+.white,
+.black {
+  position: absolute;
+  top: 0;
+}
+.white {
+  height: 100%;
+  background: #ececee;
+  box-shadow: inset -1px 0 0 #9a9aa2;
+  color: #3f3f46;
+}
+.black {
+  z-index: 1;
+  height: 60%;
+  background: #1c1c1f;
+  box-shadow: 0 0 0 1px #000;
+  color: #a1a1aa;
+}
+/* Instant on and off: playing is too frequent for a transition. */
+.white[data-pressed],
+.black[data-pressed] {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+  font-size: clamp(7px, min(4cqh, 1.5cqw), 11px);
+  line-height: 1.2;
+  pointer-events: none;
+}
+.label b {
+  font-size: clamp(10px, min(6cqh, 2.4cqw), 16px);
+  text-transform: uppercase;
+}
+.black .label {
+  font-size: clamp(7px, 1.3cqw, 10px);
+}
+.num {
+  opacity: 0.55;
+}
+
+/* Black keys get too narrow for a note name, so they keep just the letter. */
+@container (max-width: 700px) {
+  .black .label > span {
+    display: none;
+  }
+}
+
+@container (max-height: 200px) {
+  .num {
+    display: none;
+  }
+}
