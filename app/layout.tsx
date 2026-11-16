@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ConsoleFlower } from "@/app/components/console-flower";
 import { DEFAULT_PHASE, PHASE_SCRIPT } from "@/app/lib/phase";
 import "./globals.css";
 
@@ -41,7 +42,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: PHASE_SCRIPT }} />
       </head>
-      <body className="min-h-full font-sans">{children}</body>
+      <body className="min-h-full font-sans">
+        {children}
+        <ConsoleFlower />
+      </body>
     </html>
   );
 }

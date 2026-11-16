@@ -149,3 +149,50 @@ body {
     linear-gradient(90deg, transparent, rgb(225 235 255 / 0.85), transparent) center / 100% 1px no-repeat,
     linear-gradient(0deg, transparent, rgb(225 235 255 / 0.85), transparent) center / 1px 100% no-repeat;
 }
+
+/* Creeper vines (app/components/creeper-vine.tsx). Each stroke is a mask
+   that reveals the art beneath it; scrolling the page draws the strokes.
+   Without scroll-driven animation support, or with reduced motion, the
+   vines are shown fully grown. */
+.vine-draw {
+  fill: none;
+  stroke: white;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .vine-draw {
+      stroke-dashoffset: 1;
+      animation: vine-draw linear both;
+      animation-timeline: --vine;
+      animation-range: cover var(--from, 0%) cover var(--to, 100%);
+    }
+  }
+}
+
+/* The vines draw while their block scrolls past. This invisible track is
+   the block's height minus one viewport, so its `cover` range runs from
+   the block's top entering the viewport to its bottom reaching the
+   viewport bottom: exactly while the vines are pinned on screen. */
+.vine-scope {
+  timeline-scope: --vine;
+}
+
+.vine-track {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: max(0px, calc(100% - 100vh));
+  pointer-events: none;
+  view-timeline-name: --vine;
+}
+
+@keyframes vine-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
