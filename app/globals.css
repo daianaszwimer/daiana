@@ -192,7 +192,15 @@ body {
 }
 
 @keyframes vine-draw {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
   to {
     stroke-dashoffset: 0;
+    opacity: 1;
   }
 }

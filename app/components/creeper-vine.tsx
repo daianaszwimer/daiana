@@ -25,20 +25,27 @@ const STROKES: { d: string; width: number; from: number; to: number }[] = [
 
 export function CreeperVine({ side, className }: { side: "left" | "right"; className?: string }) {
   const maskId = `vine-mask-${side}`;
+  const featherId = `vine-feather-${side}`;
   return (
     <svg viewBox="0 0 348 739" aria-hidden className={className}>
       <defs>
+        {/* Blurs the mask so the art fades in at the edges of each stroke. */}
+        <filter id={featherId} x="-10%" y="-10%" width="120%" height="120%">
+          <feGaussianBlur stdDeviation="8" />
+        </filter>
         <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="348" height="739">
-          {STROKES.map(({ d, width, from, to }) => (
-            <path
-              key={d}
-              d={d}
-              pathLength={1}
-              strokeWidth={width}
-              className="vine-draw"
-              style={{ "--from": `${from}%`, "--to": `${to}%` } as CSSProperties}
-            />
-          ))}
+          <g filter={`url(#${featherId})`}>
+            {STROKES.map(({ d, width, from, to }) => (
+              <path
+                key={d}
+                d={d}
+                pathLength={1}
+                strokeWidth={width}
+                className="vine-draw"
+                style={{ "--from": `${from}%`, "--to": `${to}%` } as CSSProperties}
+              />
+            ))}
+          </g>
         </mask>
       </defs>
       <image href="/vine.png" width="348" height="739" mask={`url(#${maskId})`} />
