@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ConsoleFlower } from "@/app/components/console-flower";
 import { DEFAULT_PHASE, PHASE_SCRIPT } from "@/app/lib/phase";
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 
 const geistSans = Geist({
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full font-sans">
         {children}
         <ConsoleFlower />
+        <Analytics />
       </body>
     </html>
   );
